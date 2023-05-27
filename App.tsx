@@ -1,20 +1,35 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import { useFonts } from 'expo-font'
+import { TamaguiProvider, Theme, XStack, YStack } from 'tamagui'
+
+import config from './tamagui.config'
+import { Header } from './src/components/header'
+import { ChangeTheme } from './src/components/switch'
+import React, { useState } from 'react'
+import { TotalSomado } from './src/components/TotalSomado'
 
 export default function App() {
+  const [isDarkTheme, setIsDarkTheme] = useState(true)
+  
+  const [loaded] =  useFonts({
+    Inter: require('@tamagui/font-inter/otf/Inter-Medium.otf'),
+    InterBold: require('@tamagui/font-inter/otf/Inter-Bold.otf'),
+  })
+
+  if(!loaded) {
+    return null
+  }
+
   return (
-    <View style={styles.container}>
-      <Text>Open up App.tsx to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
+    <TamaguiProvider config={config}>
+      <Theme name={isDarkTheme ? "dark" : 'light'}>
+        <YStack bg='$background' f={1} borderColor={'$blue9Dark'} bw={4} br={46} p="$6" pt="$10">
+          <XStack jc="space-between" ai="center">
+            <Header />
+            <ChangeTheme onCheckedChange={setIsDarkTheme} />
+          </XStack>
+          <TotalSomado />
+        </YStack>
+      </Theme>
+    </TamaguiProvider>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
