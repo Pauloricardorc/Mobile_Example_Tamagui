@@ -144,7 +144,7 @@ export default function Home({ navigation }: any) {
                       iconAfter={() => (
                         <Button
                           onPress={() => handleDeletarRegistro(item.id)}
-                          backgroundColor="$red9"
+                          backgroundColor={!loading ? "$red9" : '$gray7'}
                           size="$4"
                           circular
                         >

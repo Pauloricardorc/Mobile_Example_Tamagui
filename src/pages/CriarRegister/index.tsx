@@ -25,7 +25,7 @@ const registerSchema = yup.object({
 })
 
 export default function Criar({ navigation }: any) {
-  const { control, handleSubmit, reset} = useForm<RegisterProps>({
+  const { control, handleSubmit, reset, formState: {errors}} = useForm<RegisterProps>({
     resolver: yupResolver(registerSchema)
   });
   const date = new Date().toISOString()
@@ -78,6 +78,7 @@ export default function Criar({ navigation }: any) {
               text="Titulo"
               placeholder="Descrição da compra"
               onChangeText={onChange}
+              error={errors.descricao?.message}
             />
           )}
         />
@@ -90,6 +91,7 @@ export default function Criar({ navigation }: any) {
               text="Convidado"
               placeholder="Nome do convidado"
               onChangeText={onChange}
+              error={errors.convidado?.message}
             />
           )}
         />
@@ -104,6 +106,7 @@ export default function Criar({ navigation }: any) {
               keyboardType="numeric"
               onChangeText={onChange}
               returnKeyType='done'
+              error={errors.preco?.message}
             />
           )}
         />
@@ -133,9 +136,10 @@ function InputDemo(props: {
   keyboardType?: KeyboardType | "default";
   onChangeText: any;
   returnKeyType?: ReturnKeyType | "send";
+  error?: string;
 }) {
   return (
-    <YStack space="$1.5" h="$8">
+    <YStack space="$1.5" h="$10">
       <Label htmlFor="convidado" size="$2" fontSize="$5">
         {props.text}
       </Label>
@@ -146,7 +150,11 @@ function InputDemo(props: {
         keyboardType={props.keyboardType}
         onChangeText={props.onChangeText}
         returnKeyType={props.returnKeyType}
+        boc={!!props.error ? "$red10" : '$gray5'}
       />
+      <Label color="$red10" htmlFor="error" size="$1" fontSize="$2" pl="$2">
+        {props.error}
+      </Label>
     </YStack>
   );
 }
