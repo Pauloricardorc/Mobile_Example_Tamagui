@@ -1,9 +1,15 @@
 import { Coins } from "@tamagui/lucide-icons";
 import React from "react";
-import { H3, XStack, YStack, useTheme } from "tamagui";
+import { H3, XStack, YStack } from "tamagui";
 import { LinearGradient } from 'tamagui/linear-gradient'
+import { FormatPrice } from "../../hooks/convertMoney";
 
-export function TotalSomado () {
+type Props = {
+  price: any
+}
+
+export function TotalSomado ({price}: Props) {
+  const soma = price && price.reduce((total: any, quantidade: any) => Number(total) + Number(quantidade)); 
   return (
     <YStack space f={1} h="$6">
       <LinearGradient
@@ -18,7 +24,7 @@ export function TotalSomado () {
       />
         <XStack pos={'absolute'} w='$20' alignSelf="center" height="$6" px='$4' ai='center' jc='space-between'>
           <H3 fontWeight='bold' color="whitesmoke">
-            R$ 85,25
+            {FormatPrice(soma || 0)}
           </H3>
           <Coins size={42} color="#FFFFFF" />  
         </XStack>
