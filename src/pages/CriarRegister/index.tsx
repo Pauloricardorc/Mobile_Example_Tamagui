@@ -7,28 +7,33 @@ import { api } from "../../api/axios";
 import { FormatterDate } from "../../hooks/formatterDate";
 import Toast from "react-native-toast-message";
 
-import { yupResolver } from '@hookform/resolvers/yup'
-import * as yup from 'yup';
+import { yupResolver } from "@hookform/resolvers/yup";
+import * as yup from "yup";
 
 type RegisterProps = {
-  descricao: string,
-	comprador: string,
-	convidado: string,
-	preco: string,
-	data: string,
-}
-
-const registerSchema = yup.object({
-  descricao: yup.string().required('Informe a descrição'),
-  convidado: yup.string().required('Informa o convidado'), 
-  preco: yup.string().required('Digite um preço')
-})
+  descricao: string;
+  comprador: string;
+  convidado: string;
+  preco: string;
+  data: string;
+};
 
 export default function Criar({ navigation }: any) {
-  const { control, handleSubmit, reset, formState: {errors}} = useForm<RegisterProps>({
+  const registerSchema = yup.object({
+    descricao: yup.string().required("Informe a descrição"),
+    convidado: yup.string().required("Informa o convidado"),
+    preco: yup.string().required("Digite um preço"),
+  });
+
+  const {
+    control,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<RegisterProps>({
     resolver: yupResolver(registerSchema)
   });
-  const date = new Date().toISOString()
+
+  const date = new Date().toISOString();
 
   async function handleForm(data: RegisterProps) {
     const { descricao, convidado, preco } = data;
@@ -68,7 +73,7 @@ export default function Criar({ navigation }: any) {
       <H3 alignSelf="center" fontWeight="700">
         Criar Novo Registro
       </H3>
-      <YStack space f={1}>
+      <YStack space="$1" f={1}>
         <Controller
           control={control}
           name="descricao"
@@ -79,6 +84,7 @@ export default function Criar({ navigation }: any) {
               placeholder="Descrição da compra"
               onChangeText={onChange}
               error={errors.descricao?.message}
+              name="descricao"
             />
           )}
         />
@@ -92,6 +98,7 @@ export default function Criar({ navigation }: any) {
               placeholder="Nome do convidado"
               onChangeText={onChange}
               error={errors.convidado?.message}
+              name="convidado"
             />
           )}
         />
@@ -105,26 +112,38 @@ export default function Criar({ navigation }: any) {
               placeholder="Total da compra"
               keyboardType="numeric"
               onChangeText={onChange}
-              returnKeyType='done'
+              returnKeyType="done"
               error={errors.preco?.message}
+              name="preco"
             />
           )}
         />
       </YStack>
+      <YStack gap='$4'>
       <Button
         hoverTheme
         pressTheme
         fontSize="$6"
         size="$5"
-        pos="absolute"
-        b='$4'
-        mx='$4'
-        width={'100%'}
-        backgroundColor="$blue8"
+        b="$-2"
+        width={"100%"}
+        backgroundColor="$blue9"
         onPress={handleSubmit(handleForm)}
       >
         Salvar
       </Button>
+      <Button
+        hoverTheme
+        pressTheme
+        fontSize="$6"
+        size="$5"
+        width={"100%"}
+        backgroundColor="$red9"
+        onPress={() => {}}
+      >
+        Limpar
+      </Button>
+      </YStack>
     </YStack>
   );
 }
@@ -137,6 +156,7 @@ function InputDemo(props: {
   onChangeText: any;
   returnKeyType?: ReturnKeyType | "send";
   error?: string;
+  name: string;
 }) {
   return (
     <YStack space="$1.5" h="$10">
@@ -150,7 +170,8 @@ function InputDemo(props: {
         keyboardType={props.keyboardType}
         onChangeText={props.onChangeText}
         returnKeyType={props.returnKeyType}
-        boc={!!props.error ? "$red10" : '$gray5'}
+        boc={!!props.error ? "$red10" : "$gray5"}
+        componentName={props.name}
       />
       <Label color="$red10" htmlFor="error" size="$1" fontSize="$2" pl="$2">
         {props.error}

@@ -19,7 +19,7 @@ import { Header } from "./../src/components/header";
 import { TotalSomado } from "./../src/components/TotalSomado";
 import { H3 } from "tamagui";
 import { FormatPrice } from "./hooks/convertMoney";
-import { LinearGradient } from 'tamagui/linear-gradient'
+import { LinearGradient } from "tamagui/linear-gradient";
 import { FormatterDate } from "./hooks/formatterDate";
 
 type IRegisterProps = {
@@ -64,7 +64,12 @@ export default function Home({ navigation }: any) {
       gap="$6"
     >
       <XStack jc="space-between" ai="center">
-        <ListItem p="$0" w="$14" title="Hoje" subTitle={FormatterDate(nowDate)} />
+        <ListItem
+          p="$0"
+          w="$14"
+          title="Hoje"
+          subTitle={FormatterDate(nowDate)}
+        />
         <Header />
       </XStack>
       <XStack space ai="center">
@@ -89,7 +94,12 @@ export default function Home({ navigation }: any) {
             jc="space-between"
           >
             <H3 fontWeight="bold" color="whitesmoke">
-              {register.length !== 0 && FormatPrice(register.map(e => Number(e.preco)).reduce((a: any, b: any) => a + b))}
+              {register.length !== 0 &&
+                FormatPrice(
+                  register
+                    .map((e) => Number(e.preco))
+                    .reduce((a: any, b: any) => a + b)
+                )}
             </H3>
             <Coins size={42} color="#FFFFFF" />
           </XStack>
@@ -112,7 +122,7 @@ export default function Home({ navigation }: any) {
       </Button>
       <ScrollView scrollEnabled>
         <YStack space="$3">
-          {register.length !== 0 && (
+          {register.length !== 0 ? (
             register
               .filter((registe) =>
                 registe.descricao.toLowerCase().includes(pesquisa.toLowerCase())
@@ -144,7 +154,7 @@ export default function Home({ navigation }: any) {
                       iconAfter={() => (
                         <Button
                           onPress={() => handleDeletarRegistro(item.id)}
-                          backgroundColor={!loading ? "$red9" : '$gray7'}
+                          backgroundColor={!loading ? "$red9" : "$gray7"}
                           size="$4"
                           circular
                         >
@@ -159,6 +169,10 @@ export default function Home({ navigation }: any) {
                   </YGroup.Item>
                 </YGroup>
               ))
+          ) : (
+            <YStack f={1} bg="$background">
+              <Spinner color="$blue10" size="large" />
+            </YStack>
           )}
         </YStack>
       </ScrollView>
