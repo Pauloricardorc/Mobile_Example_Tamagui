@@ -1,6 +1,6 @@
 import { ArrowLeft } from "@tamagui/lucide-icons";
-import { KeyboardType, ReturnKeyType } from "react-native";
-import { Button, H3, Input, Label, SizeTokens, XStack, YStack } from "tamagui";
+import { KeyboardType, ReturnKeyType, TextInputTextInputEventData } from "react-native";
+import { Button, H3, Input, InputProps, Label, SizeTokens, XStack, YStack } from "tamagui";
 import { Header } from "../../components/header";
 import { useForm, Controller } from "react-hook-form";
 import { api } from "../../api/axios";
@@ -18,6 +18,14 @@ type RegisterProps = {
   data: string;
 };
 
+const clearDefaultValues = {
+  descricao: '',
+  comprador: '',
+  convidado: '',
+  preco: '',  
+  data: '',
+}
+
 export default function Criar({ navigation }: any) {
   const registerSchema = yup.object({
     descricao: yup.string().required("Informe a descrição"),
@@ -29,7 +37,11 @@ export default function Criar({ navigation }: any) {
     control,
     handleSubmit,
     formState: { errors },
+    reset,
+    getValues,
+    resetField,
   } = useForm<RegisterProps>({
+    defaultValues: clearDefaultValues,
     resolver: yupResolver(registerSchema)
   });
 
@@ -49,9 +61,9 @@ export default function Criar({ navigation }: any) {
       text1: 'Notificação',
       text2: 'O registro foi criado com sucesso👋',
       position: 'bottom',
-      bottomOffset: 120,
+      bottomOffset: 100,
       visibilityTime: 5000,
-    })).then((e) => reset())
+    })).then((e) => reset(clearDefaultValues))
   }
 
   return (
@@ -77,13 +89,14 @@ export default function Criar({ navigation }: any) {
         <Controller
           control={control}
           name="descricao"
-          render={({ field: { onChange } }) => (
+          render={({ field: { onChange, value } }) => (
             <InputDemo
               size="$4"
               text="Titulo"
               placeholder="Descrição da compra"
               onChangeText={onChange}
               error={errors.descricao?.message}
+              value={value}
               name="descricao"
             />
           )}
@@ -91,13 +104,14 @@ export default function Criar({ navigation }: any) {
         <Controller
           control={control}
           name="convidado"
-          render={({ field: { onChange } }) => (
+          render={({ field: { onChange, value } }) => (
             <InputDemo
               size="$4"
               text="Convidado"
               placeholder="Nome do convidado"
               onChangeText={onChange}
               error={errors.convidado?.message}
+              value={value}
               name="convidado"
             />
           )}
@@ -105,7 +119,7 @@ export default function Criar({ navigation }: any) {
         <Controller
           control={control}
           name="preco"
-          render={({ field: { onChange } }) => (
+          render={({ field: { onChange, value } }) => (
             <InputDemo
               size="$4"
               text="Preço"
@@ -114,6 +128,7 @@ export default function Criar({ navigation }: any) {
               onChangeText={onChange}
               returnKeyType="done"
               error={errors.preco?.message}
+              value={value}
               name="preco"
             />
           )}
@@ -132,17 +147,6 @@ export default function Criar({ navigation }: any) {
       >
         Salvar
       </Button>
-      <Button
-        hoverTheme
-        pressTheme
-        fontSize="$6"
-        size="$5"
-        width={"100%"}
-        backgroundColor="$red9"
-        onPress={() => {}}
-      >
-        Limpar
-      </Button>
       </YStack>
     </YStack>
   );
@@ -157,6 +161,7 @@ function InputDemo(props: {
   returnKeyType?: ReturnKeyType | "send";
   error?: string;
   name: string;
+  value?: string;
 }) {
   return (
     <YStack space="$1.5" h="$10">
@@ -172,6 +177,7 @@ function InputDemo(props: {
         returnKeyType={props.returnKeyType}
         boc={!!props.error ? "$red10" : "$gray5"}
         componentName={props.name}
+        value={props.value}
       />
       <Label color="$red10" htmlFor="error" size="$1" fontSize="$2" pl="$2">
         {props.error}
