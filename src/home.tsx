@@ -7,6 +7,7 @@ import {
   SizeTokens,
   Spinner,
   Stack,
+  Text,
   Theme,
   XStack,
   YGroup,
@@ -93,7 +94,7 @@ export default function Home({ navigation }: any) {
             ai="center"
             jc="space-between"
           >
-            <H3 fontWeight="bold" color="whitesmoke">
+            <H3 fontWeight="bold" color="whitesmoke" >
               {register.length !== 0 &&
                 FormatPrice(
                   register
@@ -107,7 +108,7 @@ export default function Home({ navigation }: any) {
         <Button
           h="$6"
           backgroundColor="$blue9"
-          onPress={() => navigation.navigate("Criar")}
+          onPress={() => navigation.replace("Criar")}
         >
           <Plus />
         </Button>
@@ -117,9 +118,6 @@ export default function Home({ navigation }: any) {
         size="$4"
         placeholder="Pesquisar..."
       />
-      <Button onPress={carregarNovosRegistros}>
-        <Download />
-      </Button>
       <ScrollView scrollEnabled>
         <YStack space="$3">
           {register.length !== 0 ? (
@@ -132,12 +130,12 @@ export default function Home({ navigation }: any) {
                   key={item.id}
                   alignSelf="center"
                   bordered
+                  pressTheme
                   width={"100%"}
                   size="$4"
                 >
                   <YGroup.Item>
                     <ListItem
-                      hoverTheme
                       pressTheme
                       h="$7"
                       onPress={() =>
@@ -166,6 +164,7 @@ export default function Home({ navigation }: any) {
                         </Button>
                       )}
                     />
+                    <Text fontSize='$5' color="#38E54D" px='$4' pb='$3'>{FormatPrice(item?.preco)}</Text>
                   </YGroup.Item>
                 </YGroup>
               ))
@@ -193,8 +192,8 @@ function InputDemo(props: {
         placeholder={props.placeholder}
         onChangeText={props.onChangeText}
       />
-      <Button size={props.size} backgroundColor="$blue8">
-        <Search size={18} />
+      <Button size={props.size} backgroundColor="$blue9">
+        <Search size={18}  />
       </Button>
     </XStack>
   );
