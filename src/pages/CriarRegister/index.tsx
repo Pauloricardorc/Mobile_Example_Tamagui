@@ -37,14 +37,12 @@ const clearDefaultValues = {
   data: "",
 };
 
-const formatNumber = new Intl.NumberFormat('pt-BR')
-
 export default function Criar({ navigation }: any) {
   const registerSchema = yup.object({
     descricao: yup.string().required("Informe a descrição"),
     convidado: yup.string().required("Informa o convidado"),
   });
-  const [newPreco, setPreco] = useState<any>()
+  const [newPreco, setPreco] = useState<string>('')
 
   const {
     control,
@@ -60,20 +58,12 @@ export default function Criar({ navigation }: any) {
 
   async function handleForm(data: RegisterProps) {
     const { descricao, convidado } = data;
-    console.log({        descricao: descricao,
-      comprador: "Paulo",
-      convidado: convidado,
-      preco: Number(newPreco).toLocaleString('pt-BR', {
-        minimumFractionDigits: 2,
-        maximumFractionDigits: 2
-      }),
-      data: FormatterDate(date),})
     await api
       .post("criar", {
         descricao: descricao,
         comprador: "Paulo",
         convidado: convidado,
-        preco: Number(newPreco).toLocaleString(),
+        preco: Number(newPreco.replace('$', '')),
         data: FormatterDate(date),
       })
       .then((e) =>
@@ -86,7 +76,17 @@ export default function Criar({ navigation }: any) {
           visibilityTime: 6000,
         })
       )
-      .then((e) => reset(clearDefaultValues));
+      .then((e) => reset(clearDefaultValues))
+      .catch((error) => {
+        Toast.show({
+          type: "error",
+          text1: "Notificação",
+          text2: "Ocorreu alguma erro no processo de cadastro",
+          position: "bottom",
+          bottomOffset: 110,
+          visibilityTime: 6000,
+        })
+      })
   }
 
   return (
@@ -144,7 +144,7 @@ export default function Criar({ navigation }: any) {
                 text="Preço"
                 placeholder="Total da compra"
                 keyboardType="numeric"
-                onChangeText={(text: any, rawText: any) => formatNumber.format(Number(rawText))}
+                onChangeText={(text: string, rawText: any) => setPreco(text)}
                 returnKeyType="done"
                 error={errors.preco?.message}
                 value={newPreco}
